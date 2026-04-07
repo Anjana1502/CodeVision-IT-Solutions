@@ -1,25 +1,32 @@
 # CodeVision IT Solutions
 
-Analytics Dashboard for IT Workforce
+Enterprise Analytics Dashboard for IT Workforce & Project Management
 
-## Login
-- **Email:** admin@codevision.com  
+## 🔐 Demo Login
+- **Email:** admin@codevision.com
 - **Password:** blue123
 
-## Features
-- Project Health
-- Employee Attrition
-- Financial Analytics
-- Performance Insights
-- Tech Stack Analysis
+## 📊 Features
 
-## How to Use
-1. Open `index.html` in browser
-2. Enter login credentials
-3. Explore dashboard
+- **Login System** - Secure authentication with session storage
+- **KPI Cards** - 5 key metrics (Employees, Attrition, Billable %, Satisfaction, Performance)
+- **5 Analytics Modules:**
+  - 📈 Project Health - Budget vs Actual, Hours tracking
+  - ⚠️ Employee Attrition - Turnover by department, exit reasons
+  - 💰 Financial Analytics - Revenue by country, billable ratio
+  - ⭐ Performance Insights - Rating distribution, satisfaction scores
+  - 💻 Tech Stack Analysis - Technology usage and performance
 
-## Built With
-HTML, CSS, JavaScript, Chart.js
+- **Interactive Charts** - Bar, pie, line, and doughnut charts using Chart.js
+- **Data Tables** - Project variance, attrition list, top performers
+- **Responsive Design** - Works on desktop, tablet, and mobile
 
-## License
-MIT
+## 🚀 Quick Start
+
+1. **Clone or download** this repository
+2. **Open** `index.html` in your browser
+3. **Login** with the demo credentials above
+
+No installation or server required!
+
+## 📁 Files
