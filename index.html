@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>CodeVision IT Solutions | Enterprise Intelligence</title>
+    <!-- Google Fonts + Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Chart.js for lightweight, lite-color charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0f7ff;
+            overflow-x: hidden;
+        }
+
+        /* ========= LOGIN PAGE ========= */
+        .login-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(145deg, #d9eaff 0%, #bbdef5 100%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1000;
+        }
+
+        .login-card {
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(2px);
+            border-radius: 2rem;
+            padding: 48px 40px;
+            width: 460px;
+            max-width: 90%;
+            box-shadow: 0 25px 45px -12px rgba(0, 40, 80, 0.35);
+            transition: all 0.3s;
+            border: 1px solid rgba(96, 165, 250, 0.3);
+        }
+
+        .login-card h1 {
+            font-size: 1.9rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #0b3b5f, #1e6f9f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .login-card .subtitle {
+            color: #4a6f8f;
+            margin-bottom: 2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .input-field {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-field label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #1e4a76;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.3px;
+        }
+
+        .input-field input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #cde3f5;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            background: #ffffff;
+        }
+
+        .input-field input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(100deg, #1e6f9f, #3b82f6);
+            border: none;
+            border-radius: 2rem;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 20px -12px #1e6f9f;
+        }
+
+        .error-msg {
+            background: #ffe3e3;
+            color: #c2410c;
+            padding: 12px;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        /* ========= DASHBOARD (Blue Theme / Lite Charts) ========= */
+        .dashboard {
+            display: none;
+            background: #f4faff;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .dash-header {
+            background: #ffffffdd;
+            backdrop-filter: blur(12px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            border-bottom: 1px solid #cde1f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+            position: sticky;
+            top: 0;
+            z-index: 99;
+        }
+
+        .logo h2 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(120deg, #0f5288, #2c7da0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo p {
+            font-size: 0.7rem;
+            color: #5c8ab3;
+            letter-spacing: 0.5px;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            background: #eef4fc;
+            padding: 0.5rem 1.5rem;
+            border-radius: 2rem;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #256f9e;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
+            transition: 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #d9eaff;
+            color: #c2410c;
+        }
+
+        /* KPI Cards (Light pastel/blue accents) */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem 2rem 1rem 2rem;
+        }
+
+        .kpi-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            border: 1px solid #e2f0ff;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-3px);
+            border-color: #a0c4f0;
+            box-shadow: 0 10px 25px -12px rgba(0, 80, 120, 0.2);
+        }
+
+        .kpi-icon {
+            width: 44px;
+            height: 44px;
+            background: #eef5ff;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .kpi-icon i {
+            font-size: 1.5rem;
+            color: #1e6f9f;
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #0f3b5c;
+            margin-bottom: 0.2rem;
+        }
+
+        .kpi-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #4d7ca1;
+        }
+
+        .trend {
+            font-size: 0.7rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .trend.up { color: #2e7d64; }
+        .trend.down { color: #b45353; }
+
+        /* Tabs */
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+            padding: 0 2rem;
+            border-bottom: 1px solid #cfe3f5;
+            background: transparent;
+            margin-top: 0.5rem;
+        }
+
+        .tab {
+            padding: 0.8rem 1.8rem;
+            background: transparent;
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #4a6f8f;
+            cursor: pointer;
+            transition: 0.2s;
+            border-radius: 2rem 2rem 0 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab i { margin-right: 8px; }
+
+        .tab:hover { color: #1e6f9f; background: #e7f0fa; }
+
+        .tab.active {
+            color: #1a5d8f;
+            background: white;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.02);
+            border-bottom: 2px solid #3b82f6;
+        }
+
+        /* Content panels */
+        .content-panel {
+            display: none;
+            padding: 1.8rem 2rem;
+            animation: fadeSlide 0.3s ease;
+        }
+
+        .content-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Chart cards (light border, white bg) */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .chart-card {
+            background: #ffffff;
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.2rem 1.5rem 1.2rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.02);
+            border: 1px solid #e2f0ff;
+            transition: 0.2s;
+        }
+
+        .chart-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1a5276;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* Tables */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        th {
+            background: #eef4fc;
+            padding: 0.9rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #1e4a76;
+        }
+
+        td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid #e6f0fa;
+            color: #2c5a7a;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.7rem;
+            border-radius: 2rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .badge.high { background: #dff0fc; color: #1e6f9f; }
+        .badge.medium { background: #ffefdb; color: #b45f2b; }
+        .badge.low { background: #ffe3e3; color: #bc5a5a; }
+
+        @media (max-width: 780px) {
+            .chart-grid { grid-template-columns: 1fr; }
+            .nav-tabs { padding: 0 1rem; }
+            .kpi-grid { padding: 1rem; }
+        }
+        footer {
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.7rem;
+            color: #7c9fc0;
+            border-top: 1px solid #cde1f0;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- LOGIN MODULE -->
+<div id="loginWrapper" class="login-wrapper">
+    <div class="login-card">
+        <h1><i class="fas fa-chart-line"></i> CodeVision IT Solutions</h1>
+        <div class="subtitle">Intelligent Workforce & Project Analytics Platform</div>
+        <div class="input-field">
+            <label><i class="fas fa-user"></i> Email</label>
+            <input type="email" id="emailInput" placeholder="analyst@codevision.com" value="admin@codevision.com">
+        </div>
+        <div class="input-field">
+            <label><i class="fas fa-lock"></i> Password</label>
+            <input type="password" id="passwordInput" placeholder="••••••" value="blue123">
+        </div>
+        <button class="login-btn" id="loginBtn"><i class="fas fa-arrow-right-to-bracket"></i> Secure Login</button>
+        <div id="loginError" class="error-msg"><i class="fas fa-info-circle"></i> Use admin@codevision.com / blue123</div>
+    </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="dashboard">
+    <div class="dash-header">
+        <div class="logo">
+            <h2><i class="fas fa-chart-simple"></i> CodeVision IT Solutions</h2>
+            <p>Blue Horizon • Real-time Analytics</p>
+        </div>
+        <div class="user-menu">
+            <i class="fas fa-user-circle" style="font-size: 1.3rem; color:#2c7da0;"></i>
+            <span id="userNameDisplay" style="font-weight:500;">Analyst</span>
+            <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Exit</button>
+        </div>
+    </div>
+
+    <!-- KPI Row -->
+    <div class="kpi-grid" id="kpiGrid"></div>
+
+    <!-- Tabs Navigation -->
+    <div class="nav-tabs">
+        <button class="tab active" data-tab="projectHealth"><i class="fas fa-chart-line"></i> Project Health</button>
+        <button class="tab" data-tab="attrition"><i class="fas fa-user-graduate"></i> Attrition</button>
+        <button class="tab" data-tab="financial"><i class="fas fa-coins"></i> Financials</button>
+        <button class="tab" data-tab="performance"><i class="fas fa-star"></i> Performance</button>
+        <button class="tab" data-tab="tech"><i class="fas fa-code"></i> Tech Stack</button>
+    </div>
+
+    <!-- Panel 1: Project Health -->
+    <div id="projectHealth" class="content-panel active">
+        <div class="chart-grid">
+            <div class="chart-card"><h3><i class="fas fa-chart-simple"></i> Budget vs Actual Cost (Top 10)</h3><canvas id="budgetChart" height="280"></canvas></div>
+            <div class="chart-card"><h3><i class="fas fa-clock"></i> Planned vs Actual Hours</h3><canvas id="hoursChart" height="280"></canvas></div>
+            <div class="chart-card full-width"><h3><i class="fas fa-table-list"></i> Project Variance Details</h3><div class="table-wrapper"><table id="projectTable"><thead><tr><th>Project</th><th>Client</th><th>Budget (USD)</th><th>Actual Cost</th><th>Variance</th><th>Status</th></tr></thead><tbody></tbody></table></div></div>
+        </div>
+    </div>
+
+    <!-- Panel 2: Attrition -->
+    <div id="attrition" class="content-panel">
+        <div class="chart-grid">
+            <div class="chart-card"><h3><i class="fas fa-building"></i> Attrition by Department</h3><canvas id="attritionDeptChart" height="260"></canvas></div>
+            <div class="chart-card"><h3><i class="fas fa-door-open"></i> Exit Reasons</h3><canvas id="exitReasonChart" height="260"></canvas></div>
+            <div class="chart-card full-width"><h3><i class="fas fa-users-slash"></i> Employees who left (sample)</h3><div class="table-wrapper"><table id="attritionTable"><thead><tr><th>Employee</th><th>Dept</th><th>Exit Reason</th><th>Satisfaction</th></tr></thead><tbody></tbody></table></div></div>
+        </div>
+    </div>
+
+    <!-- Panel 3: Financials -->
+    <div id="financial" class="content-panel">
+        <div class="chart-grid">
+            <div class="chart-card"><h3><i class="fas fa-globe"></i> Revenue by Client Country</h3><canvas id="revenueCountryChart" height="260"></canvas></div>
+            <div class="chart-card"><h3><i class="fas fa-chart-pie"></i> Billable vs Non-Billable</h3><canvas id="billablePieChart" height="260"></canvas></div>
+            <div class="chart-card full-width"><h3><i class="fas fa-chart-line"></i> Monthly Revenue Trend</h3><canvas id="monthlyTrendChart" height="260"></canvas></div>
+        </div>
+    </div>
+
+    <!-- Panel 4: Performance -->
+    <div id="performance" class="content-panel">
+        <div class="chart-grid">
+            <div class="chart-card"><h3><i class="fas fa-chart-bar"></i> Performance Rating (1-5)</h3><canvas id="perfDistChart" height="260"></canvas></div>
+            <div class="chart-card"><h3><i class="fas fa-smile"></i> Satisfaction by Department</h3><canvas id="satisfactionChart" height="260"></canvas></div>
+            <div class="chart-card full-width"><h3><i class="fas fa-trophy"></i> Top Performers (Rating ≥4.8)</h3><div class="table-wrapper"><table id="topPerformersTable"><thead><tr><th>Employee</th><th>Dept</th><th>Performance</th><th>Satisfaction</th></tr></thead><tbody></tbody></table></div></div>
+        </div>
+    </div>
+
+    <!-- Panel 5: Technology -->
+    <div id="tech" class="content-panel">
+        <div class="chart-grid">
+            <div class="chart-card"><h3><i class="fas fa-microchip"></i> Tech Stack Popularity</h3><canvas id="techStackChart" height="280"></canvas></div>
+            <div class="chart-card"><h3><i class="fas fa-chart-line"></i> Avg Performance by Tech</h3><canvas id="techPerfChart" height="280"></canvas></div>
+        </div>
+    </div>
+    <footer>© 2025 CodeVision IT Solutions • Enterprise Intelligence Suite</footer>
+</div>
+
+<script>
+    // ----- DATASET INSIGHTS (from your CSV extract) -----
+    const insights = {
+        totalEmployees: 200,
+        attritionCount: 48,
+        billableCount: 132,
+        avgSatisfaction: 3.12,
+        avgPerformance: 3.17,
+        projects: [
+            { name: "Project_39", client: "TechCorp USA", budget: 345915, actual: 303747 },
+            { name: "Project_10", client: "FinBank UK", budget: 227684, actual: 176789 },
+            { name: "Project_30", client: "FinBank UK", budget: 322178, actual: 372529 },
+            { name: "Project_40", client: "StartupXYZ", budget: 464182, actual: 416350 },
+            { name: "Project_19", client: "RetailGiant", budget: 463333, actual: 558050 },
+            { name: "Project_16", client: "RetailGiant", budget: 110074, actual: 124245 },
+            { name: "Project_44", client: "TechCorp USA", budget: 196905, actual: 176143 },
+            { name: "Project_06", client: "TechCorp USA", budget: 335399, actual: 266226 },
+            { name: "Project_05", client: "TechCorp USA", budget: 341247, actual: 371876 },
+            { name: "Project_49", client: "TechCorp USA", budget: 369576, actual: 306549 }
+        ],
+        attritionByDept: { "UI/UX": 8, "Cloud": 7, "Software Dev": 12, "Support": 6, "DevOps": 5, "QA": 5, "Data Analytics": 5 },
+        exitReasons: { "Better Opportunity": 12, "Higher Salary": 8, "Personal": 9, "Further Studies": 10, "Relocation": 6 },
+        attritionList: [
+            { name: "Employee_003", dept: "Software Dev", reason: "Relocation", sat: 1.6 },
+            { name: "Employee_004", dept: "Support", reason: "Higher Salary", sat: 1.5 },
+            { name: "Employee_011", dept: "Software Dev", reason: "Better Opportunity", sat: 2.4 },
+            { name: "Employee_016", dept: "DevOps", reason: "Further Studies", sat: 1.2 },
+            { name: "Employee_025", dept: "Software Dev", reason: "Relocation", sat: 3.2 },
+            { name: "Employee_030", dept: "DevOps", reason: "Higher Salary", sat: 1.3 },
+            { name: "Employee_033", dept: "Software Dev", reason: "Better Opportunity", sat: 2.8 }
+        ],
+        revenueByCountry: { "USA": 4.28e6, "UK": 3.18e6, "India": 1.95e6 },
+        techStackData: { "AWS": 34, "Python": 28, "Java": 25, "Node.js": 32, "React": 22, "Azure": 19, "Salesforce": 21, "SAP": 19 },
+        techPerformance: { "AWS": 3.4, "Python": 3.2, "Java": 3.1, "Node.js": 3.5, "React": 3.3, "Azure": 3.0, "Salesforce": 3.2, "SAP": 2.9 },
+        deptSatisfaction: { "UI/UX": 3.1, "Cloud": 3.4, "Software Dev": 3.0, "Support": 3.2, "DevOps": 3.3, "QA": 3.1, "Data Analytics": 2.9 },
+        topPerformers: [
+            { name: "Employee_026", dept: "DevOps", rating: 5.0, sat: 3.9 },
+            { name: "Employee_041", dept: "QA", rating: 5.0, sat: 3.4 },
+            { name: "Employee_049", dept: "DevOps", rating: 5.0, sat: 4.8 },
+            { name: "Employee_134", dept: "Cloud", rating: 5.0, sat: 2.9 },
+            { name: "Employee_010", dept: "Support", rating: 4.9, sat: 2.7 }
+        ]
+    };
+
+    // ----- Authentication helpers -----
+    function handleLogin() {
+        const email = document.getElementById('emailInput').value.trim();
+        const pwd = document.getElementById('passwordInput').value.trim();
+        if(email === "admin@codevision.com" && pwd === "blue123") {
+            sessionStorage.setItem("cogLogged", "true");
+            sessionStorage.setItem("cogUser", email.split('@')[0]);
+            document.getElementById('loginWrapper').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('userNameDisplay').innerText = email.split('@')[0];
+            loadDashboardContent();
+        } else {
+            const errDiv = document.getElementById('loginError');
+            errDiv.style.display = 'block';
+            setTimeout(() => errDiv.style.display = 'none', 2800);
+        }
+    }
+
+    function handleLogout() {
+        sessionStorage.removeItem("cogLogged");
+        document.getElementById('dashboard').style.display = 'none';
+        document.getElementById('loginWrapper').style.display = 'flex';
+    }
+
+    // --- Dashboard Render (KPI + Charts + Tables)
+    function loadDashboardContent() {
+        loadKPIs();
+        loadTables();
+        initAllCharts();
+    }
+
+    function loadKPIs() {
+        const attritionRate = ((insights.attritionCount / insights.totalEmployees) * 100).toFixed(1);
+        const billableRate = ((insights.billableCount / insights.totalEmployees) * 100).toFixed(0);
+        const kpiContainer = document.getElementById('kpiGrid');
+        kpiContainer.innerHTML = `
+            <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-users"></i></div><div class="kpi-value">${insights.totalEmployees}</div><div class="kpi-label">Total Employees</div><div class="trend up"><i class="fas fa-arrow-up"></i> +8% headcount</div></div>
+            <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-user-slash"></i></div><div class="kpi-value">${attritionRate}%</div><div class="kpi-label">Attrition Rate</div><div class="trend down"><i class="fas fa-arrow-down"></i> -2% vs target</div></div>
+            <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-charging-station"></i></div><div class="kpi-value">${billableRate}%</div><div class="kpi-label">Billable %</div><div class="trend up"><i class="fas fa-chart-line"></i> +4% utilization</div></div>
+            <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-smile"></i></div><div class="kpi-value">${insights.avgSatisfaction}</div><div class="kpi-label">Employee Satisfaction</div><div class="trend down"><i class="fas fa-chart-line"></i> needs focus</div></div>
+            <div class="kpi-card"><div class="kpi-icon"><i class="fas fa-chart-line"></i></div><div class="kpi-value">${insights.avgPerformance}</div><div class="kpi-label">Performance Rating</div><div class="trend up"><i class="fas fa-arrow-up"></i> above avg</div></div>
+        `;
+    }
+
+    function loadTables() {
+        // Project variance table
+        const projTbody = document.querySelector('#projectTable tbody');
+        projTbody.innerHTML = insights.projects.map(p => {
+            const variance = ((p.actual - p.budget) / p.budget * 100).toFixed(1);
+            const status = variance <= 0 ? 'On Track' : 'Over Budget';
+            const badgeClass = variance <= 0 ? 'high' : 'low';
+            return `<tr><td style="font-weight:500;">${p.name}</td><td>${p.client}</td><td>$${p.budget.toLocaleString()}</td><td>$${p.actual.toLocaleString()}</td><td class="${variance <= 0 ? 'trend up' : 'trend down'}">${variance}%</td><td><span class="badge ${badgeClass}">${status}</span></td></tr>`;
+        }).join('');
+
+        // Attrition table
+        const attTbody = document.querySelector('#attritionTable tbody');
+        attTbody.innerHTML = insights.attritionList.map(a => `<tr><td>${a.name}</td><td>${a.dept}</td><td>${a.reason}</td><td>${a.sat}</td></tr>`).join('');
+
+        // Top performers
+        const topTbody = document.querySelector('#topPerformersTable tbody');
+        topTbody.innerHTML = insights.topPerformers.map(t => `<tr><td>${t.name}</td><td>${t.dept}</td><td><span class="badge high">${t.rating}</span></td><td>${t.sat}</td></tr>`).join('');
+    }
+
+    // All charts with LITE COLOR palettes (soft blues, pastels, light tones)
+    function initAllCharts() {
+        // Budget vs Actual (pastel blue / soft coral)
+        const ctxBudget = document.getElementById('budgetChart').getContext('2d');
+        new Chart(ctxBudget, {
+            type: 'bar', data: { labels: insights.projects.map(p => p.name), datasets: [
+                { label: 'Budget', data: insights.projects.map(p => p.budget), backgroundColor: '#7ab3c8', borderRadius: 8 },
+                { label: 'Actual Cost', data: insights.projects.map(p => p.actual), backgroundColor: '#f2b5a7', borderRadius: 8 }
+            ]}, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top' } } }
+        });
+
+        new Chart(document.getElementById('hoursChart'), { type: 'bar', data: { labels: insights.projects.slice(0,6).map(p=>p.name), datasets: [{ label: 'Planned Hrs', data: [1425,567,572,629,1203,1969], backgroundColor: '#6c9ebf' },{ label: 'Actual Hrs', data: [1016,640,427,691,1494,1712], backgroundColor: '#f0b39b' }] }, options: { responsive: true } });
+        new Chart(document.getElementById('attritionDeptChart'), { type: 'bar', data: { labels: Object.keys(insights.attritionByDept), datasets: [{ label: 'Attrition Count', data: Object.values(insights.attritionByDept), backgroundColor: '#88b2d4' }] }, options: { responsive: true } });
+        new Chart(document.getElementById('exitReasonChart'), { type: 'pie', data: { labels: Object.keys(insights.exitReasons), datasets: [{ data: Object.values(insights.exitReasons), backgroundColor: ['#95c4e6', '#b8d9f5', '#cbe5fe', '#d4eaff', '#e2f0ff'] }] }, options: { responsive: true, plugins: { legend: { position: 'bottom' } } } });
+        new Chart(document.getElementById('revenueCountryChart'), { type: 'doughnut', data: { labels: Object.keys(insights.revenueByCountry), datasets: [{ data: Object.values(insights.revenueByCountry), backgroundColor: ['#3a7ca5', '#5f9bc2', '#8fb9da'] }] }, options: { responsive: true } });
+        new Chart(document.getElementById('billablePieChart'), { type: 'pie', data: { labels: ['Billable', 'Non-Billable'], datasets: [{ data: [insights.billableCount, insights.totalEmployees - insights.billableCount], backgroundColor: ['#79b8d4', '#cbdde9'] }] }, options: { responsive: true } });
+        new Chart(document.getElementById('perfDistChart'), { type: 'bar', data: { labels: ['1★', '2★', '3★', '4★', '5★'], datasets: [{ label: 'Employees', data: [19,28,42,62,49], backgroundColor: '#8abfdf' }] }, options: { responsive: true } });
+        new Chart(document.getElementById('satisfactionChart'), { type: 'bar', data: { labels: Object.keys(insights.deptSatisfaction), datasets: [{ label: 'Satisfaction (1-5)', data: Object.values(insights.deptSatisfaction), backgroundColor: '#8fb6d4' }] }, options: { responsive: true, scales: { y: { max: 5, min: 0 } } } });
+        new Chart(document.getElementById('techStackChart'), { type: 'bar', data: { labels: Object.keys(insights.techStackData), datasets: [{ label: 'Employees', data: Object.values(insights.techStackData), backgroundColor: '#7aafcf' }] }, options: { responsive: true } });
+        new Chart(document.getElementById('techPerfChart'), { type: 'line', data: { labels: Object.keys(insights.techPerformance), datasets: [{ label: 'Avg Performance', data: Object.values(insights.techPerformance), borderColor: '#2f7c9e', tension: 0.2, fill: false, pointBackgroundColor: '#4f9bc2' }] }, options: { responsive: true, scales: { y: { max: 5, min: 0 } } } });
+        new Chart(document.getElementById('monthlyTrendChart'), { type: 'line', data: { labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], datasets: [{ label: 'Revenue (k$)', data: [520,545,580,610,640,670,710,750,790,830,870,910], borderColor: '#4387b3', fill: true, backgroundColor: '#cae3f5' }] }, options: { responsive: true } });
+    }
+
+    // Tabs switch
+    function switchTab(tabId) {
+        document.querySelectorAll('.content-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    // Attach listeners
+    document.getElementById('loginBtn').addEventListener('click', handleLogin);
+    document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+    document.querySelectorAll('.tab').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const targetId = btn.getAttribute('data-tab');
+            if(targetId) switchTab(targetId);
+        });
+    });
+
+    // session check
+    if(sessionStorage.getItem('cogLogged') === 'true') {
+        document.getElementById('loginWrapper').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        document.getElementById('userNameDisplay').innerText = sessionStorage.getItem('cogUser') || 'Analyst';
+        loadDashboardContent();
+    } else {
+        document.getElementById('dashboard').style.display = 'none';
+        document.getElementById('loginWrapper').style.display = 'flex';
+    }
+</script>
+</body>
+</html>
